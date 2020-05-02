@@ -48,20 +48,6 @@ const getUploadToken = async (uid: string, data: any, context: functions.https.C
   }
 };
 
-export async function storeUploadCodes(uploadCodes: string[]) {
-  // Prepare encrypter
-  const encryptionKey = await getEncryptionKey();
-  const customEncrypter = new CustomEncrypter(encryptionKey);
-
-  const payload = Buffer.from(JSON.stringify(uploadCodes));
-
-  // Encode payload
-  const payloadData = customEncrypter.encryptAndEncode(payload);
-
-  const writeResult = await admin.firestore().collection('codes').doc('uploadCode').set({uploadCode: payloadData.toString('base64')});
-  console.log('storeCodes:', 'upload code is stored successfully at', formatTimestamp(writeResult.writeTime.seconds));
-}
-
 export async function retrieveUploadCodes(): Promise<string[]> {
   const document = await admin.firestore().collection('codes').doc('uploadCode').get();
 
