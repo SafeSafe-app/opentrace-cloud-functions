@@ -30,6 +30,9 @@ interface FunctionConfig {
   api: {
     keyPath: string
     defaultVersion: number
+  },
+  pin: {
+    lifetime: number // in minutes
   }
 }
 

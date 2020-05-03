@@ -28,6 +28,9 @@ const config: FunctionConfig = {
   api: {
     keyPath: "apiKeyPath",
     defaultVersion: 1
+  },
+  pin: {
+    lifetime: 30// in minutes
   }
 };
 
