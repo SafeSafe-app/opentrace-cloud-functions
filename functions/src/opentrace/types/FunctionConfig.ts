@@ -2,7 +2,7 @@ import Authenticator from "../utils/Authenticator";
 import PinGenerator from "../utils/PinGenerator";
 
 // SUPPORTED_REGIONS from function-configuration.d.ts
-declare type SUPPORTED_REGIONS = "us-central1" | "us-east1" | "us-east4" | "europe-west1" | "europe-west2" | "asia-east2" | "asia-northeast1";
+declare type SUPPORTED_REGIONS = "us-central1" | "us-east1" | "us-east4" | "europe-west1" | "europe-west3" | "asia-east2" | "asia-northeast1";
 
 interface FunctionConfig {
   projectId: string // Firebase Project ID
