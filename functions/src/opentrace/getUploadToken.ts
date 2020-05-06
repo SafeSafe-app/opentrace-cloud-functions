@@ -1,10 +1,10 @@
 import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
 
 import config from "../config";
 import getEncryptionKey from "./utils/getEncryptionKey";
 import CustomEncrypter from "./utils/CustomEncrypter";
 import formatTimestamp from "./utils/formatTimestamp";
+import usePinCode from "./utils/usePinCode";
 
 /**
  * Get upload token by passing in a secret string as `data`
@@ -12,13 +12,7 @@ import formatTimestamp from "./utils/formatTimestamp";
 const getUploadToken = async (uid: string, data: any, context: functions.https.CallableContext) => {
   console.log('getUploadToken:', 'uid', uid, 'data', data, 'ip', context.rawRequest.ip);
 
-  let valid = false;
-  if (data) {
-    const uploadCodes = await retrieveUploadCodes();
-    console.log('getUploadToken:', `obtained ${uploadCodes.length} upload codes`);
-    valid = uploadCodes.find(x => x === data) !== undefined;
-    console.log('getUploadToken:', `data is ${valid ? 'valid' : 'not valid'} code`);
-  }
+  let valid = await usePinCode(data);
 
   if (valid) {
     const payload = Buffer.from(JSON.stringify(
@@ -47,20 +41,6 @@ const getUploadToken = async (uid: string, data: any, context: functions.https.C
     throw new functions.https.HttpsError('invalid-argument', `Invalid data: ${data}`);
   }
 };
-
-export async function retrieveUploadCodes(): Promise<string[]> {
-  const document = await admin.firestore().collection('codes').doc('uploadCode').get();
-
-  // Prepare encrypter
-  const encryptionKey = await getEncryptionKey();
-  const customEncrypter = new CustomEncrypter(encryptionKey);
-
-  const payloadData = Buffer.from(document.get('uploadCode'), 'base64');
-
-  const decryptedData = customEncrypter.decodeAndDecrypt(payloadData, [payloadData.length - 32, 16, 16]);
-
-  return JSON.parse(Buffer.from(decryptedData, 'base64').toString());
-}
 
 /**
  * Validate upload token by decrypting it and checking if it's still withing validity period
