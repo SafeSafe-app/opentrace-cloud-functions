@@ -27,6 +27,10 @@ interface FunctionConfig {
     tokenValidityPeriod: number // in hours
     bucketForArchive: string
   }
+  api: {
+    keyPath: string
+    defaultVersion: number
+  }
 }
 
 export default FunctionConfig;

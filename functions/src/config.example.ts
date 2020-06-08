@@ -25,6 +25,10 @@ const config: FunctionConfig = {
     tokenValidityPeriod: 2, // in hours
     bucketForArchive: "archive-bucket",
   },
+  api: {
+    keyPath: "apiKeyPath",
+    defaultVersion: 1
+  }
 };
 
 export default config;
